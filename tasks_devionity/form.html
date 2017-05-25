@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="form_style.css">
+</head>
+<body>
+    <div class="container">
+        <form action="form_handler.php" method="post" class="contact_form">
+            <div>
+                <span class="label">Enter your name:</span>
+                <input type="text" name="user_name" required>
+            </div>
+            <div>
+                <span class="label">Enter email:</span>
+                <input type="email" name="email" required>
+            </div>
+            <div>
+                <span class="label">Chose the topic:</span>
+                <select name="subject" id="subject" required>
+                    <option value="problem" name="problem">The problem with site</option>
+                    <option value="search" name="search">Can't find a good you need</option>
+                    <option value="mistake" name="mistake">Found the mistake on site</option>
+                    <option selected value="improving" name="improving">Suggestions for improving</option>
+                    <option value="other" name="other">Other messages</option>
+                </select>
+            </div>
+            <div>
+                <span class="label">Leave the message:</span>
+                <textarea name="message" required></textarea>
+            </div>
+            <div>
+                <span class="label"></span>
+                <button class="btn" name="submit" type="submit" value="Send">Send</button>
+                <button class="btn" name="cancel" type="reset">Clear form</button>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>

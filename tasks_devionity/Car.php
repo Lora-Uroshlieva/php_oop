@@ -19,6 +19,7 @@ class Car
         $this->model = $model;
         $this->year = $year;
         $this->driver = $driver;
+        echo 'Car created.';
     }
 
     public function showBrand()
