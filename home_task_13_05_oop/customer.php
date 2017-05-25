@@ -4,12 +4,12 @@ ini_set('display_errors', 1);
 
 class Customer
 {
-    public $id;
-    public $firstName;
-    public $lastName;
-    public $sex;
-    public $dateOfBirth;
-    public $address;
+    protected $id;
+    protected $firstName;
+    protected $lastName;
+    protected $sex;
+    protected $dateOfBirth;
+    protected $address;
     protected $balance;
     protected $login;
     protected $password;
@@ -43,10 +43,18 @@ class Customer
     public function getFullName()
     {
         return sprintf(
-                '%s %s',
+                'Mr %s %s',
                 $this->firstName,
                 $this->lastName
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -80,8 +88,7 @@ class Customer
     {
         $now = new DateTime();
         $age = $now->diff($this->dateOfBirth);
-        echo "The age is: ".$age->format('%Y');
-        return $age;
+        return "The age is: ".$age->format('%Y');
 
     }
 }
@@ -124,7 +131,7 @@ class Sex
     /**
      * @return array
      */
-    public static function getAllowedSexes(): array
+    public static function getAllowedSexes()
     {
         return self::$allowedSexes;
     }
@@ -133,14 +140,62 @@ class Sex
 }
 
 
-$ivanov = new Customer(1, 'Ivan', 'Ivanov', new Sex('man'),
-    new DateTime('1980-01-01'), 'Kiev', 3000, 'ivanov2017', 'jhjgfjsgfsgs');
+//$ivanov = new Customer(1, 'Ivan', 'Ivanov', new Sex('man'),
+//    new DateTime('1980-01-01'), 'Kiev', 3000, 'ivanov2017', 'jhjgfjsgfsgs');
 
-var_dump($ivanov);
-echo $ivanov->getAddress(), '<br>';
-echo $ivanov->getFullName(), '<br>';
-echo $ivanov->getBalance(), '<br>';
-$ivanov->changeBalance(-500);
-echo $ivanov->getBalance(), '<br>';
-$ivanov->getAge();
 
+//testing:
+//var_dump($ivanov);
+//echo $ivanov->getAddress(), '<br>';
+//echo $ivanov->getFullName(), '<br>';
+//echo $ivanov->getBalance(), '<br>';
+//$ivanov->changeBalance(-500);
+//echo $ivanov->getBalance(), '<br>';
+//echo $ivanov->getAge();
+
+
+//using database:
+$pdo = new \PDO('mysql:host=localhost;dbname=customers', 'root', '111');
+
+$pdo->query("INSERT INTO customer 
+    (firstName, lastName, sex, dateOfBirth, address, balance, login, password) 
+    VALUES 
+    ('Petrov', 'Petr', 'man', '1990-01-02', 'Kiev, Kreshatik 24', 1000, 'petya-1990', '000'),
+    ('Pupkin', 'Vasia', 'man', '1984-01-05', 'Kiev, Teligi 2', 5000, 'vasp_222', '222'),
+    ('Poroshenko', 'Petro', 'man', '1965-03-07', 'Kiev, Bankova 3', 5000000, 'vash_prez', '007')
+    ");
+
+$query = $pdo->query("SELECT * FROM customer"); //get all users from table
+$rows = $query->fetchAll(PDO::FETCH_NUM); //fetch into index array
+$users = [];
+
+
+//transform all users from query into objects Customer and push them into array $users
+foreach ($rows as $row) {
+    list($id, $firstName, $lastName, $sex, $dateOfBirth, $address, $balance, $login, $password) = $row;
+    $sex = new Sex($sex);
+    $dateOfBirth = new DateTime($dateOfBirth);
+
+    $usr = new Customer($id, $firstName, $lastName,
+        $sex, $dateOfBirth, $address, $balance,
+        $login, $password
+        );
+    array_push($users, $usr);
+}
+
+//working with some user from set.
+$test_usr = $users[2];
+
+if ($test_usr instanceof Customer) {
+    $test_usr->changeBalance(-5000);
+}
+
+$new_bal =  $test_usr->getBalance();
+
+$id = $test_usr->getId();
+$query = $pdo->query(
+    "UPDATE customer 
+    SET balance=$new_bal
+    WHERE id=$id
+    ");
+//var_dump($query);
