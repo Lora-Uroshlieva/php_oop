@@ -1,12 +1,13 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: lora
- * Date: 23.05.17
- * Time: 22:04
- */
-class User2
+interface UserInterface
+{
+    public function login();
+    public function logout();
+    public function __construct($login, $password, $email, $rating=0);
+}
+
+class User2 implements UserInterface
 {
     protected $login;
     protected $password;
@@ -39,6 +40,17 @@ class User2
     {
         $this->isLogged = false;
         echo 'You are logged out of system.<br>';
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->$name = $value;
+        echo "The property '$name' was changed to '$value'.";
     }
 }
 
@@ -74,3 +86,12 @@ $a = clone $admin;
 $a->__construct('second_admin', '000000', 'test@mail.ua', 2);
 var_dump($a);
 var_dump($admin===$a);
+
+echo $mike->email;
+$mike->password = '12345';
+echo $mike->password;
+
+$ser = serialize($mike);
+echo $ser;
+echo '<br>';
+var_export($mike);

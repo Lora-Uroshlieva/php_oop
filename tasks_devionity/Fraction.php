@@ -13,7 +13,7 @@ class Fraction
      * @param $numerator
      * @param $denominator
      */
-    public function __construct($numerator, $denominator)
+    public function __construct(int $numerator, int $denominator)
     {
         $this->numerator = $numerator;
         $this->denominator = $denominator;
@@ -41,6 +41,17 @@ class Fraction
     {
         return $f1 + $f2;
     }
+    public static function divide($f1, $f2)
+    {
+        try {
+            if ($f2===0) {
+                throw new Exception('Division by zero!');
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $f1 / $f2;
+    }
 }
 
 $fr = new Fraction(15, 45);
@@ -50,8 +61,10 @@ var_dump($fr);
 $fr->convertToDecimal();
 var_dump($fr);
 
-echo Fraction::add(0.5, 0.3);
+echo Fraction::add(0.5, 0.3).'<br><br>';
 //Создать класс Fraction, который моделирует простую дробь
 //с числителем и знаменателем. Определить методы конструктор,
 //кувгсешщт и представления дроби в десятичном виде.
 //Определить статические методы для арифметических операций с двумя дробями.
+
+echo Fraction::divide(15, 0);
